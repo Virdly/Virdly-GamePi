@@ -17,7 +17,7 @@
 #define BTN_START  26
 #define BTN_SELECT 19
 #define BTN_L      23
-#define BTN_R      14
+#define BTN_R      4
 #define BTN_LEFT   16
 #define BTN_UP     15
 #define BTN_RIGHT  13
@@ -25,4 +25,5 @@
 
 // Пин динамика
 #define BUZ 18
+
 
