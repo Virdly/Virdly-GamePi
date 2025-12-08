@@ -61,7 +61,7 @@ GButton buttdown(BTN_DOWN);
 
 
 void setup() {
-  tft.init(240, 240); //Инициализируем экран
+  tft.init(TFT_WIDTH, TFT_HEIGHT); //Инициализируем экран
   tft.setRotation(2); //Устанавливаем ориентацию экрана
   tft.fillScreen(FONE_COLOR); //Закрашиваем экран
   tft.setFont(&Bahamas6pt8b); //Устанавливаем шрифт

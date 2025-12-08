@@ -1,18 +1,18 @@
+//Объект экрана
 extern Adafruit_ST7789 tft;
 
+//Переменные
 extern uint16_t FONE_COLOR;
 extern uint16_t TEXT_COLOR;
-
 extern byte MainSelect;
 extern byte SettSelect;
-
 extern bool AUDIOC;
 
 void mainmenu() {
   tft.setTextSize(1);
   tft.setCursor(0, 10);
   tft.print("Главное Меню");
-  tft.drawLine(0, 15, TFT_WEIGHT, 15, TEXT_COLOR);
+  tft.drawLine(0, 15, TFT_WIDTH, 15, TEXT_COLOR);
 
   if(AUDIOC==true) {
     tft.drawRGBBitmap(240-8-5,3,bitmap_AudioON,8,7);
@@ -42,7 +42,7 @@ void settingsmenu() {
   tft.setTextSize(1);
   tft.setCursor(0, 10);
   tft.print("Настройки");
-  tft.drawLine(0, 15, TFT_WEIGHT, 15, TEXT_COLOR);
+  tft.drawLine(0, 15, TFT_WIDTH, 15, TEXT_COLOR);
 
   if(AUDIOC==true) {
     tft.drawRGBBitmap(240-8-5,3,bitmap_AudioON,8,7);
