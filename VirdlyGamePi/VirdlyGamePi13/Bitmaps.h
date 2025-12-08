@@ -1,0 +1,18 @@
+extern uint16_t FONE_COLOR;
+//Просто заменяем 0x9838 на цвет фона
+//Для кастомных битмапов используйте цвет заливки фона #9c04bd
+
+// 'AudioOFF', 9x7px
+const uint16_t bitmap_AudioOFF [] PROGMEM = {
+	FONE_COLOR, FONE_COLOR, 0xffff, 0xffff, FONE_COLOR, FONE_COLOR, FONE_COLOR, FONE_COLOR, FONE_COLOR, 0xffff, 0xffff, FONE_COLOR, 0xffff, FONE_COLOR, FONE_COLOR, FONE_COLOR, 
+	FONE_COLOR, FONE_COLOR, 0xffff, FONE_COLOR, FONE_COLOR, 0xffff, FONE_COLOR, 0xffff, FONE_COLOR, FONE_COLOR, 0xffff, 0xffff, FONE_COLOR, FONE_COLOR, 0xffff, FONE_COLOR, 
+	FONE_COLOR, 0xffff, 0xffff, FONE_COLOR, 0xffff, FONE_COLOR, FONE_COLOR, 0xffff, FONE_COLOR, FONE_COLOR, 0xffff, 0xffff, FONE_COLOR, 0xffff, 0xffff, FONE_COLOR, 
+	0xffff, FONE_COLOR, 0xffff, FONE_COLOR, FONE_COLOR, 0xffff, FONE_COLOR, FONE_COLOR, 0xffff, 0xffff, FONE_COLOR, FONE_COLOR, FONE_COLOR, FONE_COLOR, 0x9838
+};
+// 'AudioON', 8x7px
+const uint16_t bitmap_AudioON [] PROGMEM = {
+	FONE_COLOR, FONE_COLOR, 0xffff, 0xffff, FONE_COLOR, FONE_COLOR, 0xffff, FONE_COLOR, 0xffff, 0xffff, FONE_COLOR, 0xffff, FONE_COLOR, FONE_COLOR, FONE_COLOR, 0xffff, 
+	0xffff, FONE_COLOR, FONE_COLOR, 0xffff, FONE_COLOR, 0xffff, FONE_COLOR, 0xffff, 0xffff, FONE_COLOR, FONE_COLOR, 0xffff, FONE_COLOR, 0xffff, FONE_COLOR, 0xffff, 
+	0xffff, FONE_COLOR, FONE_COLOR, 0xffff, FONE_COLOR, 0xffff, FONE_COLOR, 0xffff, 0xffff, 0xffff, FONE_COLOR, 0xffff, FONE_COLOR, FONE_COLOR, FONE_COLOR, 0xffff, 
+	FONE_COLOR, FONE_COLOR, 0xffff, 0xffff, FONE_COLOR, FONE_COLOR, 0xffff, FONE_COLOR
+};

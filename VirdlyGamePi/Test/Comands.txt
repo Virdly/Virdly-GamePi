@@ -1,0 +1,19 @@
+Serial:
+Отдельные команды
+
+TXT:TEXT01:HELLO WORLD;
+
+SetFone:ST77XX_BLACK;
+SetTextColor:ST77XX_WHITE;
+AudioCheck:1; //1-true,0-false
+
+json:
+{
+  "Design": {
+    "Fone": "ST77XX_BLACK",
+    "TextColor": "ST77XX_WHITE"
+  },
+  "Variables": {
+    "AudioCheck": 1
+  }
+}
