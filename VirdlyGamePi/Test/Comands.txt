@@ -1,5 +1,7 @@
+В будущем будут добавлены
 Serial:
 Отдельные команды
+
 
 TXT:TEXT01:HELLO WORLD;
 
@@ -16,4 +18,5 @@ json:
   "Variables": {
     "AudioCheck": 1
   }
+
 }
