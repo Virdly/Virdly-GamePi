@@ -1,4 +1,6 @@
 extern uint16_t FONE_COLOR;
+//Просто заменяем 0x9838 на цвет фона
+//Для кастомных битмапов используйте цвет заливки фона #9c04bd
 
 // 'AudioOFF', 9x7px
 const uint16_t bitmap_AudioOFF [] PROGMEM = {
