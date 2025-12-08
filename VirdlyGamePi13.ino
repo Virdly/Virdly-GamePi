@@ -1,13 +1,14 @@
+//Loading library
 #include <Adafruit_GFX.h>
-#include <Adafruit_ST7789.h>  // библиотека для дисплея ST7789
-#include <SPI.h>              // SPI подключение
+#include <Adafruit_ST7789.h>
+#include <SPI.h>
 #include "GyverButton.h"
 #include "Bahamas6.h"
 #include "Settings.h"
 #include "Bitmaps.h"
 
-
-uint16_t FONE_COLOR = ST77XX_BLACK; //0xf800
+//Variables in the main menu, etc.
+uint16_t FONE_COLOR = ST77XX_BLACK;
 uint16_t TEXT_COLOR = ST77XX_WHITE;
 boolean AUDIOC = true;
 
@@ -15,6 +16,7 @@ byte MainMenu = 0;
 byte MainSelect = 0;
 byte SettSelect = 0;
 
+//Creating a screen and buttons object
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
 
 GButton buttup(BTN_UP);
