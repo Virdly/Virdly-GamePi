@@ -1,5 +1,5 @@
 // Ширина и высота экрана
-#define TFT_WIDTH  240  // исправил TFT_WEIGHT → TFT_WIDTH
+#define TFT_WIDTH  240
 #define TFT_HEIGHT 240
 
 // Пины экрана
@@ -25,3 +25,4 @@
 
 // Пин динамика
 #define BUZ 18
+
