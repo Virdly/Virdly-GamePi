@@ -14,10 +14,10 @@ void mainmenu() {
   tft.print("Главное Меню");
   tft.drawLine(0, 15, TFT_WIDTH, 15, TEXT_COLOR);
 
-  if(AUDIOC==true) {
-    tft.drawRGBBitmap(240-8-5,3,bitmap_AudioON,8,7);
+  if (AUDIOC == true) {
+    tft.drawRGBBitmap(240 - 8 - 5, 3, bitmap_AudioON, 8, 7);
   } else {
-    tft.drawRGBBitmap(240-8-5,3,bitmap_AudioOFF,8,7);
+    tft.drawRGBBitmap(240 - 8 - 5, 3, bitmap_AudioOFF, 9, 7);
   }
 
   tft.setTextSize(2);
@@ -34,7 +34,7 @@ void mainmenu() {
     tft.setCursor(0, 38);
     tft.print(">");
   } else {
-    tft.setCursor(0, 38+18*MainSelect);
+    tft.setCursor(0, 38 + 18 * MainSelect);
     tft.print(">");
   }
 }
@@ -44,10 +44,13 @@ void settingsmenu() {
   tft.print("Настройки");
   tft.drawLine(0, 15, TFT_WIDTH, 15, TEXT_COLOR);
 
-  if(AUDIOC==true) {
-    tft.drawRGBBitmap(240-8-5,3,bitmap_AudioON,8,7);
+  if (AUDIOC == true) {
+    tft.drawRGBBitmap(20 + 40 + 15, 38 + 7, bitmap_CheckON, 14, 14);
+    tft.drawRGBBitmap(240 - 8 - 5, 3, bitmap_AudioON, 8, 7);
+
   } else {
-    tft.drawRGBBitmap(240-8-5,3,bitmap_AudioOFF,8,7);
+    tft.drawRGBBitmap(20 + 40 + 15, 38 + 7, bitmap_CheckOFF, 14, 14);
+    tft.drawRGBBitmap(240 - 8 - 5, 3, bitmap_AudioOFF, 9, 7);
   }
 
   tft.setTextSize(2);
@@ -64,7 +67,13 @@ void settingsmenu() {
     tft.setCursor(0, 38);
     tft.print(">");
   } else {
-    tft.setCursor(0, 38+18*MainSelect);
+    tft.setCursor(0, 38 + 18 * MainSelect);
     tft.print(">");
   }
+}
+void info() {
+  tft.setTextSize(1);
+  tft.setCursor(0,7);
+  tft.print("Virdly-GamePi это прошивка специально созданая для связки Waveshare-RP2040 PiZero и Waveshare-GamePi13.В прошивке присудствуют базовые функции кастомизации,усановки программ,чтение txt и jpeg файлов,файловый менеджер.  Автор:Rubuhs");
+  tft.setTextSize(2);
 }

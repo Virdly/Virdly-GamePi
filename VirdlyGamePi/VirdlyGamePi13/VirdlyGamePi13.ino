@@ -45,7 +45,7 @@ https://github.com/earlephilhower/arduino-pico/releases/download/global/package_
 
 //Переменные меню и тд
 uint16_t FONE_COLOR = ST77XX_BLACK;
-uint16_t TEXT_COLOR = ST77XX_WHITE;
+uint16_t TEXT_COLOR = ST77XX_GREEN;
 boolean AUDIOC = true;
 
 byte MainMenu = 0;
@@ -61,12 +61,12 @@ GButton buttdown(BTN_DOWN);
 
 
 void setup() {
-  tft.init(TFT_WIDTH, TFT_HEIGHT); //Инициализируем экран
-  tft.setRotation(2); //Устанавливаем ориентацию экрана
-  tft.fillScreen(FONE_COLOR); //Закрашиваем экран
-  tft.setFont(&Bahamas6pt8b); //Устанавливаем шрифт
-  tft.setTextColor(TEXT_COLOR); //Устанавливаем цвет текста
-  mainmenu(); //Отображаем главное меню
+  tft.init(TFT_WIDTH, TFT_HEIGHT);  //Инициализируем экран
+  tft.setRotation(2);               //Устанавливаем ориентацию экрана
+  tft.fillScreen(FONE_COLOR);       //Закрашиваем экран
+  tft.setFont(&Bahamas6pt8b);       //Устанавливаем шрифт
+  tft.setTextColor(TEXT_COLOR);     //Устанавливаем цвет текста
+  mainmenu();                       //Отображаем главное меню
 }
 
 void loop() {
@@ -103,15 +103,26 @@ void loop() {
     if (butty.isClick()) {
       switch (MainSelect) {
         case 0:
+          //Изменяем переменную Меню
           MainMenu = 1;
+          //Очищаем экран
           tft.fillRect(0, 0, 240, 120, FONE_COLOR);
+          //Отрисовываем меню
           settingsmenu();
           break;
         case 1:
+          //В будущем быдут добавлены
           break;
         case 2:
+          //В будущем быдут добавлены
           break;
         case 3:
+          //Изменяем переменную Меню
+          MainMenu = 2;
+          //Очищаем экран
+          tft.fillRect(0, 0, 240, 120, FONE_COLOR);
+          //Отрисовываем меню
+          info();
           break;
       }
     }
@@ -144,17 +155,59 @@ void loop() {
     if (butty.isClick()) {
       switch (SettSelect) {
         case 0:
+          //Изменяем переменную Меню
           MainMenu = 0;
+          //Очищаем экран
           tft.fillRect(0, 0, 240, 120, FONE_COLOR);
+          //Отрисовываем главное меню
           mainmenu();
           break;
         case 1:
+          //Очищаем старые места битмапов
+          tft.fillRect(75, 38 + 7, 14, 14, FONE_COLOR);
+          tft.fillRect(240 - 8 - 5, 3, 10, 7, FONE_COLOR);
+          //Меняем значение вкл/выкл 
+          AUDIOC = !AUDIOC;
+
+          //Рисуем обновленные битмапы
+          if (AUDIOC == true) {
+            tft.drawRGBBitmap(20 + 40 + 15, 38 + 7, bitmap_CheckON, 14, 14);
+            tft.drawRGBBitmap(240 - 8 - 5, 3, bitmap_AudioON, 8, 7);
+          } else {
+            tft.drawRGBBitmap(20 + 40 + 15, 38 + 7, bitmap_CheckOFF, 14, 14);
+            tft.drawRGBBitmap(240 - 8 - 5, 3, bitmap_AudioOFF, 9, 7);
+          }
           break;
         case 2:
+        //Меняем значения на стандартные
+          FONE_COLOR = ST77XX_BLACK;
+          TEXT_COLOR = ST77XX_WHITE;
+          AUDIOC = true;
+          //Устонавливаем цвет текста
+          tft.setTextColor(TEXT_COLOR);
+          //Очищаем экран
+          tft.fillScreen(FONE_COLOR);
+          //Выводим текст на экран
+          tft.setCursor((240 - (9 * 15)) / 2, 60);
+          tft.print("Требуется");
+          tft.setCursor((240 - (12 * 14)) / 2, 80);
+          tft.print("Перезагрузка");
+          //Ждем 500мс
+          delay(500);
+          //Изменяем значение переменной MainMenu на -1 
+          MainMenu = -1;
           break;
         case 3:
           break;
       }
+    }
+  }
+  //Инфо
+  if (MainMenu == 2) {
+    if (butty.isClick()) {
+      MainMenu = 0;
+      tft.fillScreen(FONE_COLOR);
+      mainmenu();
     }
   }
 }
