@@ -45,7 +45,7 @@ https://github.com/earlephilhower/arduino-pico/releases/download/global/package_
 
 //Переменные меню и тд
 uint16_t FONE_COLOR = ST77XX_BLACK;
-uint16_t TEXT_COLOR = ST77XX_GREEN;
+uint16_t TEXT_COLOR = ST77XX_WHITE;
 boolean AUDIOC = true;
 
 byte MainMenu = 0;
