@@ -18,8 +18,7 @@ void processBitmap() {
     String[] lines = loadStrings(inputFile);
     StringBuilder sb = new StringBuilder();
 
-    for (String line : lines) {
-      // Заменяем все вхождения
+    for (String line : lines) {
       line = line.replace(color1, color1Name);
       line = line.replace(color2, color2Name);
       sb.append(line).append("\n");
