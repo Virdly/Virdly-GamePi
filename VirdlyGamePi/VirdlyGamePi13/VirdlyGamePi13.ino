@@ -116,8 +116,8 @@ void setup() {
     File file = LittleFS.open("/VConfig.json", "w");
     StaticJsonDocument<200> doc;
 
-    doc["Design"]["TextColor"] = "ST77XX_WHITE";
-    doc["Variables"]["AudioCheck"] = 1;
+    doc["Design"]["TextColor"] = TEXTCB;
+    doc["Variables"]["AudioCheck"] = AUDIOCB;
 
     serializeJson(doc, file);
     file.close();
@@ -317,8 +317,8 @@ void loop() {
             tft.setTextSize(2);
             StaticJsonDocument<256> doc;
 
-            doc["Design"]["TextColor"] = "ST77XX_WHITE";
-            doc["Variables"]["AudioCheck"] = 1;
+            doc["Design"]["TextColor"] = TEXTCB;
+            doc["Variables"]["AudioCheck"] = AUDIOCB;
 
             File file = LittleFS.open("/VConfig.json", "w");
             serializeJsonPretty(doc, file);
