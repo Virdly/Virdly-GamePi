@@ -1,6 +1,6 @@
 # Virdly-GamePi
 
-Не большая Операционная Система специально созданная для связки Waveshare RP2040 PiZero и Waveshare GamePi13
+### Не большая Операционная Система специальносо зданная для связки Waveshare RP2040 PiZero и Waveshare GamePi13
 
 
 
