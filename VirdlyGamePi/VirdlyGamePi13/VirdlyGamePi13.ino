@@ -239,7 +239,7 @@ void loop() {
     //условия при нажатии кнопок
     if (buttup.isClick() && SettSelect > 0) {
       SettSelect--;
-      tft.fillRect(0, 17, 19, 38 + 18 * 3, FONE_COLOR);
+      tft.fillRect(0, 17, 19, 38 + 18 * 4, FONE_COLOR);
       if (SettSelect == 0) {
         tft.setCursor(0, 38);
         tft.print(">");
@@ -250,7 +250,7 @@ void loop() {
     }
     if (buttdown.isClick() && SettSelect < 4) {
       SettSelect++;
-      tft.fillRect(0, 17, 19, 38 + 18 * 3, FONE_COLOR);
+      tft.fillRect(0, 17, 19, 38 + 18 * 4, FONE_COLOR);
       if (SettSelect == 0) {
         tft.setCursor(0, 38);
         tft.print(">");
