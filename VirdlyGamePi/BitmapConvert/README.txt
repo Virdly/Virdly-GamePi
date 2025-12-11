@@ -49,3 +49,17 @@ const uint16_t bitmap_AudioOFF [] PROGMEM = {
 После этого откройте код Processing и нажмите кнопку Запустить в левом верхнем углу.
 
 В той же папке появится новый файл converted_bitmap.txt — готовый битмап для главного меню или подменю.
+
+ВНИМАНИЕ: 
+Битмап будет со стандартными настройками
+uint16_t FONE_COLOR = ST77XX_BLACK;
+uint16_t TEXT_COLOR = ST77XX_WHITE;
+В коде их можно заменить но
+через VConfig.json цвет и фон битмапа не будут изменяться.
+Если хотите что бы текст и битмапы были одним цветом то лучше просто заменить
+uint16_t FONE_COLOR = ST77XX_BLACK;
+uint16_t TEXT_COLOR = ST77XX_WHITE;
+Но если вы хотите что бы цвет текста был другим от битмапа то измените параметры VConfig.json
+
+115200 бод
+VCONFIG={   "Design": {     "TextColor": "ST77XX_WHITE"   },   "Variables": {     "AudioCheck": 1   }  };
