@@ -6,6 +6,7 @@ extern uint16_t FONE_COLOR;
 extern uint16_t TEXT_COLOR;
 extern byte MainSelect;
 extern byte SettSelect;
+extern byte SettCastom;
 extern bool AUDIOC;
 
 void mainmenu() {
@@ -59,21 +60,50 @@ void settingsmenu() {
   tft.setCursor(20, 38 + 18 * 1);
   tft.print("Звук");
   tft.setCursor(20, 38 + 18 * 2);
-  tft.print("Сброс Настроек");
+  tft.print("Кастомизация");
   tft.setCursor(20, 38 + 18 * 3);
+  tft.print("Сброс Настроек");
+  tft.setCursor(20, 38 + 18 * 4);
   tft.print("Форматирование");
 
-  if (SettSelect == 0) {
+  tft.setCursor(0, 38 + 18 * SettSelect);
+  tft.print(">");
+}
+void kcastom() {
+  tft.setTextSize(1);
+  tft.setCursor(0, 10);
+  tft.print("Кастомизация");
+  tft.drawLine(0, 15, TFT_WIDTH, 15, TEXT_COLOR);
+
+  tft.setCursor(0, 38 + 18 * SettCastom);
+  tft.print(">");
+  tft.setTextSize(2);
+
+  tft.setTextSize(2);
+  tft.setCursor(20, 38);
+  tft.print("Назад");
+  tft.setCursor(20, 38 + 18 * 1);
+  tft.print("White");
+  tft.setCursor(20, 38 + 18 * 2);
+  tft.print("Black");
+  tft.setCursor(20, 38 + 18 * 3);
+  tft.print("Red");
+  tft.setCursor(20, 38 + 18 * 4);
+  tft.print("Green");
+  tft.setCursor(20, 38 + 18 * 5);
+  tft.print("Blue");
+
+  if (SettCastom == 0) {
     tft.setCursor(0, 38);
     tft.print(">");
   } else {
-    tft.setCursor(0, 38 + 18 * MainSelect);
+    tft.setCursor(0, 38 + 18 * SettCastom);
     tft.print(">");
   }
 }
 void info() {
   tft.setTextSize(1);
-  tft.setCursor(0,7);
+  tft.setCursor(0, 7);
   tft.print("Virdly-GamePi это прошивка специально созданая для связки Waveshare-RP2040 PiZero и Waveshare-GamePi13.В прошивке присудствуют базовые функции кастомизации,усановки программ,чтение txt и jpeg файлов,файловый менеджер.  Автор:Rubuhs");
   tft.setTextSize(2);
 }

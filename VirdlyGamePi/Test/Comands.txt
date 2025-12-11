@@ -1,22 +1,9 @@
-В будущем будут добавлены
-Serial:
+Serial: 115200 бод
 Отдельные команды
 
+TXT:TEXT01:HELLO WORLD; (Еще не добавлено)
 
-TXT:TEXT01:HELLO WORLD;
-
-SetFone:ST77XX_BLACK;
-SetTextColor:ST77XX_WHITE;
-AudioCheck:1; //1-true,0-false
+SetConfig=ST77XX_WHITE,1;
 
 json:
-{
-  "Design": {
-    "Fone": "ST77XX_BLACK",
-    "TextColor": "ST77XX_WHITE"
-  },
-  "Variables": {
-    "AudioCheck": 1
-  }
-
-}
+VCONFIG={   "Design": {     "TextColor": "ST77XX_WHITE"   },   "Variables": {     "AudioCheck": 1   }  };

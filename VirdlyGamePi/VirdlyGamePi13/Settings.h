@@ -25,3 +25,8 @@
 
 // Пин динамика
 #define BUZ 18
+
+//Стандартные настройки при сбросе
+#define AUDIOCB 1
+uint16_t FONECB = ST77XX_BLACK;
+uint16_t TEXTCB = ST77XX_WHITE;
