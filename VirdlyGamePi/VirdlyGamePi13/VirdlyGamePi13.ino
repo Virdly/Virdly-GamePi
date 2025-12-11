@@ -94,7 +94,10 @@ void setup() {
   tft.setFont(&Bahamas6pt8b);       //Устанавливаем шрифт
   tft.setTextColor(TEXT_COLOR);
   tft.fillScreen(FONE_COLOR);  //Закрашиваем экран
+
+  //Проверка есть ли файл VConfig.json
   if (LittleFS.exists("/VConfig.json")) {
+    //Если он есть то просто читаем настройки
     File file = LittleFS.open("/VConfig.json", "r");
     StaticJsonDocument<256> doc;
     DeserializationError err = deserializeJson(doc, file);  // Парсим JSON
@@ -113,6 +116,7 @@ void setup() {
     }
 
   } else {
+    //Если нет то создаем новый
     File file = LittleFS.open("/VConfig.json", "w");
     StaticJsonDocument<200> doc;
 
@@ -129,52 +133,51 @@ void loop() {
   buttup.tick();
   butty.tick();
   buttdown.tick();
+
   if (Serial.available() > 0) {
     String key = Serial.readStringUntil('=');
-    String val = Serial.readStringUntil(';');
-    if (key == "VCONFIG") {
+
+    if (key == "SetConfig") {
+      String val1 = Serial.readStringUntil(',');
+      String val2 = Serial.readStringUntil(';');
+      if (val2 == "1") {
+        AUDIOC = true;
+      } else {
+        AUDIOC = false;
+      }
+      TEXT_COLOR = ColorUint(val1);
+      tft.setTextColor(TEXT_COLOR);
+
+      //Сохраняем новые настройки
+      StaticJsonDocument<256> doc;
+
+      doc["Design"]["TextColor"] = ColorUint(val1);
+      doc["Variables"]["AudioCheck"] = AUDIOC;
+
       File file = LittleFS.open("/VConfig.json", "w");
-      file.println(val);
+      serializeJsonPretty(doc, file);
       file.close();
+    } else if (key == "VCONFIG") {
+      String val1 = Serial.readStringUntil(';');
+      File file1 = LittleFS.open("/VConfig.json", "w");
+      file1.print(val1);
+      file1.close();
 
-      File file1 = LittleFS.open("/VConfig.json", "r");
-      StaticJsonDocument<256> doc1;
-      DeserializationError err = deserializeJson(doc1, file1);  // Парсим JSON
-      file.close();
+      File file2 = LittleFS.open("/VConfig.json", "r");
+      StaticJsonDocument<256> doc;
+      DeserializationError err = deserializeJson(doc, file2);  // Парсим JSON
+      file2.close();
 
-      String textColor = doc1["Design"]["TextColor"].as<String>();
-      int audioCheck = doc1["Variables"]["AudioCheck"];
+      String textColor = doc["Design"]["TextColor"].as<String>();
+      int audioCheck = doc["Variables"]["AudioCheck"];
 
       if (audioCheck == 1) {
         AUDIOC = true;
       } else {
         AUDIOC = false;
       }
-
       TEXT_COLOR = ColorUint(textColor);
       tft.setTextColor(TEXT_COLOR);
-    }
-    if (key = "SetConfig") {
-      String val1 = Serial.readStringUntil(',');
-      String val2 = Serial.readStringUntil(';');
-
-      StaticJsonDocument<256> doc;
-
-      doc["Design"]["TextColor"] = val1;
-      doc["Variables"]["AudioCheck"] = val2;
-
-      File file = LittleFS.open("/VConfig.json", "w");
-      serializeJsonPretty(doc, file);
-      file.close();
-
-      TEXT_COLOR = ColorUint(val1);
-      tft.setTextColor(TEXT_COLOR);
-
-      if (val2 == "1") {
-        AUDIOC = 1;
-      } else {
-        AUDIOC = 0;
-      }
     }
   }
 
@@ -203,10 +206,11 @@ void loop() {
         tft.print(">");
       }
     }
+    //Условие если нажали на кнопку Y
     if (butty.isClick()) {
       switch (MainSelect) {
         case 0:
-          //Изменяем переменную Меню
+          //Переходим на настройки
           MainMenu = 1;
           //Очищаем экран
           tft.fillRect(0, 0, 240, 120, FONE_COLOR);
@@ -220,7 +224,7 @@ void loop() {
           //В будущем быдут добавлены
           break;
         case 3:
-          //Изменяем переменную Меню
+          //Переходим на меню Инфо
           MainMenu = 2;
           //Очищаем экран
           tft.fillRect(0, 0, 240, 120, FONE_COLOR);
@@ -255,10 +259,11 @@ void loop() {
         tft.print(">");
       }
     }
+    //Условие если нажали на кнопку Y
     if (butty.isClick()) {
       switch (SettSelect) {
         case 0:
-          //Изменяем переменную Меню
+          //Возращаемся в главное меню
           MainMenu = 0;
           //Очищаем экран
           tft.fillRect(0, 0, 240, 120, FONE_COLOR);
@@ -267,6 +272,9 @@ void loop() {
           break;
         case 1:
           {
+            //Изменяем Значения AUDIO на вкл и выкл
+
+
             //Очищаем старые места битмапов
             tft.fillRect(75, 38 + 7, 14, 14, FONE_COLOR);
             tft.fillRect(240 - 8 - 5, 3, 10, 7, FONE_COLOR);
@@ -281,27 +289,34 @@ void loop() {
               tft.drawRGBBitmap(20 + 40 + 15, 38 + 7, bitmap_CheckOFF, 14, 14);
               tft.drawRGBBitmap(240 - 8 - 5, 3, bitmap_AudioOFF, 9, 7);
             }
+            //Перезаписываем VConfig.json
             StaticJsonDocument<256> doc;
 
+            //Ставим новые значения
             doc["Design"]["TextColor"] = TEXT_COLOR;
             doc["Variables"]["AudioCheck"] = AUDIOC;
 
+            //Сохраняем
             File file = LittleFS.open("/VConfig.json", "w");
             serializeJsonPretty(doc, file);
             file.close();
             break;
           }
         case 2:
-          //Изменяем переменную Меню
+          //Переходим в меню Кастомизации
           MainMenu = 3;
           //Очищаем экран
           tft.fillRect(0, 0, 240, 150, FONE_COLOR);
-          //Отрисовываем главное меню
+          //Отрисовываем меню
           kcastom();
 
           break;
         case 3:
           {
+            //Меню сброса настроек
+
+
+
             //Меняем значения на стандартные
             FONE_COLOR = FONECB;
             TEXT_COLOR = TEXTCB;
@@ -315,19 +330,22 @@ void loop() {
             tft.setCursor((240 - (2 * 25)) / 2, 100);
             tft.print("ОК");
             tft.setTextSize(2);
+
+            //Записываем новые значения
             StaticJsonDocument<256> doc;
 
             doc["Design"]["TextColor"] = TEXTCB;
             doc["Variables"]["AudioCheck"] = AUDIOCB;
 
+            //Сохраняем
             File file = LittleFS.open("/VConfig.json", "w");
             serializeJsonPretty(doc, file);
             file.close();
             //Ждем 500мс
             delay(500);
+            //Очищаем и выводим картинку
             tft.fillScreen(FONE_COLOR);
             settingsmenu();
-
             break;
           }
         case 4:
@@ -360,19 +378,23 @@ void loop() {
         tft.print(">");
       }
     }
+    //Условие при нажатии на кнопку Y
     if (butty.isClick()) {
       switch (SettCastom) {
         case 0:
+          //Выходим в настройки
           MainMenu = 1;
           //Очищаем экран
           tft.fillRect(0, 0, 240, 150, FONE_COLOR);
-          //Отрисовываем главное меню
+          //Отрисовываем меню
           settingsmenu();
           break;
         case 1:
           {
+            //Меняем цвет текста
             TEXT_COLOR = ST77XX_WHITE;
             tft.setTextColor(ST77XX_WHITE);
+            //Сохраняем новые настройки
             StaticJsonDocument<256> doc;
 
             doc["Design"]["TextColor"] = "ST77XX_WHITE";
@@ -385,8 +407,10 @@ void loop() {
           }
         case 2:
           {
+            //Меняем цвет текста
             TEXT_COLOR = ST77XX_BLACK;
             tft.setTextColor(ST77XX_BLACK);
+            //Сохраняем новые настройки
             StaticJsonDocument<256> doc;
 
             doc["Design"]["TextColor"] = "ST77XX_BLACK";
@@ -399,8 +423,10 @@ void loop() {
           }
         case 3:
           {
+            //Меняем цвет текста
             TEXT_COLOR = ST77XX_RED;
             tft.setTextColor(ST77XX_RED);
+            //Сохраняем новые настройки
             StaticJsonDocument<256> doc;
 
             doc["Design"]["TextColor"] = "ST77XX_RED";
@@ -413,8 +439,10 @@ void loop() {
           }
         case 4:
           {
+            //Меняем цвет текста
             TEXT_COLOR = ST77XX_GREEN;
             tft.setTextColor(ST77XX_GREEN);
+            //Сохраняем новые настройки
             StaticJsonDocument<256> doc;
 
             doc["Design"]["TextColor"] = "ST77XX_GREEN";
@@ -427,8 +455,10 @@ void loop() {
           }
         case 5:
           {
+            //Меняем цвет текста
             TEXT_COLOR = ST77XX_BLUE;
             tft.setTextColor(ST77XX_BLUE);
+            //Сохраняем новые настройки
             StaticJsonDocument<256> doc;
 
             doc["Design"]["TextColor"] = "ST77XX_BLUE";
@@ -445,6 +475,7 @@ void loop() {
   //Инфо
   if (MainMenu == 2) {
     if (butty.isClick()) {
+      //При нажатии на кнопку переходим в главное меню
       MainMenu = 0;
       tft.fillScreen(FONE_COLOR);
       mainmenu();
