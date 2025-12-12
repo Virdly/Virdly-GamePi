@@ -1,25 +1,20 @@
-<h1 align="center">Virdly-GamePi</h1>
-
-<p align="center">
-  Небольшая прошивка, созданная специально для связки  
-  <b>Waveshare RP2040 PiZero</b> и <b>Waveshare GamePi13</b>.
-</p>
 
 ---
+# Virdly-GamePi
 
-## Возможности прошивки
+Небольшая прошивка для Waveshare RP2040 PiZero + Waveshare GamePi13.
 
-- Настройки ✔
-- Кастомизация ✔
-- Файловый менеджер (в разработке)
-- Программы (в разработке)
+[![Release](https://img.shields.io/github/v/release/Virdly/Virdly-GamePi)](https://github.com/Virdly/Virdly-GamePi/releases) [![License](https://img.shields.io/github/license/Virdly/Virdly-GamePi)](./LICENSE)
 
----
+Коротко:
+- Поддерживает: Waveshare RP2040 PiZero, GamePi13
+- Функции: настройки, кастомизация, файловый менеджер (в разработке), программы (в разработке)
 
-## Функции файлового менеджера
+Быстрая прошивка:
+1. Скачать последнюю релиз-версию в Releases.
+2. Записать .uf2 / .bin на устройство или SD-карту.
+3. Вставить и перезагрузить устройство.
 
-1. Создание и удаление папок
-2. Чтение файлов .txt и .jpeg
-3. Редактирование и сохранение файлов
+Помощь: открывайте Issues или присылайте PR. Лицензия: укажи желаемую (например MIT).
 
 ---
