@@ -1,9 +1,20 @@
 Serial: 115200 бод
 Отдельные команды
 
-TXT:TEXT01:HELLO WORLD; (Еще не добавлено)
+TXT=TEXT01,HELLO WORLD;
 
 SetConfig=ST77XX_WHITE,1;
 
 json:
 VCONFIG={   "Design": {     "TextColor": "ST77XX_WHITE"   },   "Variables": {     "AudioCheck": 1   }  };
+
+{
+  "Design": {
+    "TextColor": "ST77XX_WHITE"
+  },
+  "Variables": {
+    "AudioCheck": 1,
+	"MaxFiles": 0,
+	"FileName": ["VConfig.json"]
+  }
+}

@@ -56,10 +56,13 @@ uint16_t FONE_COLOR = ST77XX_BLACK;
 uint16_t TEXT_COLOR = ST77XX_WHITE;
 boolean AUDIOC = true;
 
-byte MainMenu = 0;
-byte MainSelect = 0;
-byte SettSelect = 0;
-byte SettCastom = 0;
+byte MainMenu = 0;     //Переменная для изменения меню
+byte MainSelect = 0;   //Переменная для перемещения в главном меню
+byte SettSelect = 0;   //Переменная для перемещения в настройках
+byte SettCastom = 0;   //Переменная для переменщения в кастомизации
+byte FileSelect = 0;   //Переменная для перемещения в Файлах
+byte MAXFILE = 0;      //Переменная макс файлов
+String FileName[200];  //Переменная имен файлов
 
 //Создаем объекты экрана и кнопок
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
@@ -68,6 +71,7 @@ GButton buttup(BTN_UP);
 GButton butty(BTN_Y);
 GButton buttdown(BTN_DOWN);
 
+//Функция для перевода String в uint16_t
 uint16_t ColorUint(String Text) {
   if (Text == "ST77XX_WHITE") {
     return ST77XX_WHITE;
@@ -134,10 +138,11 @@ void loop() {
   butty.tick();
   buttdown.tick();
 
+  //Парсинг команд из Serial
   if (Serial.available() > 0) {
     String key = Serial.readStringUntil('=');
 
-    if (key == "SetConfig") {
+    if (key == "SetConfig") {  //Установка значений
       String val1 = Serial.readStringUntil(',');
       String val2 = Serial.readStringUntil(';');
       if (val2 == "1") {
@@ -157,7 +162,7 @@ void loop() {
       File file = LittleFS.open("/VConfig.json", "w");
       serializeJsonPretty(doc, file);
       file.close();
-    } else if (key == "VCONFIG") {
+    } else if (key == "VCONFIG") {  //Установка значений
       String val1 = Serial.readStringUntil(';');
       File file1 = LittleFS.open("/VConfig.json", "w");
       file1.print(val1);
@@ -178,6 +183,13 @@ void loop() {
       }
       TEXT_COLOR = ColorUint(textColor);
       tft.setTextColor(TEXT_COLOR);
+    } else if (key == "TXT") {  //Создание txt файлов
+      String val1 = Serial.readStringUntil(',');
+      String val2 = Serial.readStringUntil(';');
+
+      File file = LittleFS.open("/" + String(val1) + ".txt", "w");
+      file.println(val2);
+      file.close();
     }
   }
 
@@ -218,8 +230,41 @@ void loop() {
           settingsmenu();
           break;
         case 1:
-          //В будущем быдут добавлены
-          break;
+          {
+            //Переходим в меню настройки
+            MainMenu = 4;
+
+            //Очищаем экран
+            tft.fillRect(0, 0, 240, 120, FONE_COLOR);
+
+            //Отрисовываем меню без файлов
+            filesm();
+            tft.setTextSize(2);
+            //Начинаем определять сколько файлов
+            File root = LittleFS.open("/", "r");
+            File file = root.openNextFile();
+            //Переменная для отрисовки и сохранения файлов
+            int i = 0;
+            while (file) {
+              //Выбираем позицию
+              if (i == 0) {
+                tft.setCursor(20, 38 + 18);
+              } else if (i > 0) {
+                tft.setCursor(20, 38 + 18 * (i + 1));
+              }
+              //Отрисовываем
+              tft.print(file.name());
+              //Сохраняем имена файлов в массив
+              FileName[i] = file.name();
+              //Переходим к следующему файлу
+              file = root.openNextFile();
+              //Увеличиваем значение
+              i++;
+            }
+            //В конце цикла устонавливаем макс колич файлов
+            MAXFILE = i - 1;
+            break;
+          }
         case 2:
           //В будущем быдут добавлены
           break;
@@ -232,6 +277,92 @@ void loop() {
           info();
           break;
       }
+    }
+  }
+  //Файлы
+  if (MainMenu == 4) {
+    //Перемещение
+    if (buttup.isClick() && FileSelect > 0) {
+      FileSelect--;
+      Serial.println(FileSelect);
+      tft.fillRect(0, 17, 19, 38 + 18 * 3, FONE_COLOR);
+      if (FileSelect == 0) {
+        tft.setCursor(0, 38);
+        tft.print(">");
+      } else {
+        tft.setCursor(0, 38 + 18 * FileSelect);
+        tft.print(">");
+      }
+    }
+    if (buttdown.isClick() && FileSelect < MAXFILE + 1) {
+      FileSelect++;
+      Serial.println(FileSelect);
+      tft.fillRect(0, 17, 19, 38 + 18 * 3, FONE_COLOR);
+      if (FileSelect == 0) {
+        tft.setCursor(0, 38);
+        tft.print(">");
+      } else {
+        tft.setCursor(0, 38 + 18 * FileSelect);
+        tft.print(">");
+      }
+    }
+    //Условие при нажатии кнопки Y
+    if (butty.isClick()) {
+      if (FileSelect == 0) {  //Если выбрали Выход и нажали на кнопку
+        //Очищаем экран
+        tft.fillScreen(FONE_COLOR);
+        //Переходим к главному меню
+        MainMenu = 0;
+        //Отрисовываем главное меню
+        mainmenu();
+      } else if (FileSelect > 0) {  //Если выбрали файл и нажали на Y
+        //Пишем ОК
+        Serial.println("OK");
+        //Читаем выбраный файл
+        File file = LittleFS.open("/" + FileName[FileSelect - 1], "r");
+        String val1 = file.readString();
+        file.close();
+
+        //Очищаем экран и ставим настройки
+        tft.fillScreen(FONE_COLOR);
+        tft.setTextSize(1);
+        tft.setCursor(0, 7);
+        //Отображаем текст
+        tft.print(val1);
+        Serial.println(val1);
+        tft.setTextSize(2);
+        //Переходи в меню чтения
+        MainMenu = 5;
+      }
+    }
+  }
+  //Чтение файлов
+  if (MainMenu == 5) {
+    //Условие если нажали на кнопку Y
+    if (butty.isClick()) {
+      //Переходим в меню Файлы
+      MainMenu = 4;
+      //Очищаем экран
+      tft.fillScreen(FONE_COLOR);
+      //Отображаем интерфейс без файлов
+      filesm();
+      //Отображаем имена
+      tft.setTextSize(2);
+      File root = LittleFS.open("/", "r");
+      File file = root.openNextFile();
+      int i = 0;
+      while (file) {
+        if (i == 0) {
+          tft.setCursor(20, 38 + 18);
+        } else if (i > 0) {
+          tft.setCursor(20, 38 + 18 * (i + 1));
+        }
+        tft.print(file.name());
+        FileName[i] = file.name();
+        file = root.openNextFile();
+        i++;
+      }
+      MAXFILE = i - 1;
     }
   }
   //Настройки
@@ -314,8 +445,6 @@ void loop() {
         case 3:
           {
             //Меню сброса настроек
-
-
 
             //Меняем значения на стандартные
             FONE_COLOR = FONECB;
@@ -403,6 +532,8 @@ void loop() {
             File file = LittleFS.open("/VConfig.json", "w");
             serializeJsonPretty(doc, file);
             file.close();
+            tft.fillScreen(FONE_COLOR);
+            kcastom();
             break;
           }
         case 2:
@@ -419,6 +550,8 @@ void loop() {
             File file = LittleFS.open("/VConfig.json", "w");
             serializeJsonPretty(doc, file);
             file.close();
+            tft.fillScreen(FONE_COLOR);
+            kcastom();
             break;
           }
         case 3:
@@ -435,6 +568,8 @@ void loop() {
             File file = LittleFS.open("/VConfig.json", "w");
             serializeJsonPretty(doc, file);
             file.close();
+            tft.fillScreen(FONE_COLOR);
+            kcastom();
             break;
           }
         case 4:
@@ -451,6 +586,8 @@ void loop() {
             File file = LittleFS.open("/VConfig.json", "w");
             serializeJsonPretty(doc, file);
             file.close();
+            tft.fillScreen(FONE_COLOR);
+            kcastom();
             break;
           }
         case 5:
@@ -467,6 +604,8 @@ void loop() {
             File file = LittleFS.open("/VConfig.json", "w");
             serializeJsonPretty(doc, file);
             file.close();
+            tft.fillScreen(FONE_COLOR);
+            kcastom();
             break;
           }
       }

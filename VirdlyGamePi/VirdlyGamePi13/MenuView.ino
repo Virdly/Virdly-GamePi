@@ -69,6 +69,26 @@ void settingsmenu() {
   tft.setCursor(0, 38 + 18 * SettSelect);
   tft.print(">");
 }
+void filesm() {
+  tft.setTextSize(1);
+  tft.setCursor(0, 10);
+  tft.print("Файлы");
+  tft.drawLine(0, 15, TFT_WIDTH, 15, TEXT_COLOR);
+
+  if (AUDIOC == true) {
+    tft.drawRGBBitmap(240 - 8 - 5, 3, bitmap_AudioON, 8, 7);
+
+  } else {
+    tft.drawRGBBitmap(240 - 8 - 5, 3, bitmap_AudioOFF, 9, 7);
+  }
+
+  tft.setTextSize(2);
+  tft.setCursor(20,38);
+  tft.print("Выход");
+
+  tft.setCursor(0, 38 + 18 * FileSelect);
+  tft.print(">");
+}
 void kcastom() {
   tft.setTextSize(1);
   tft.setCursor(0, 10);
