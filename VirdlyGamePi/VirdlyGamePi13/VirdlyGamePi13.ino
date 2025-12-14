@@ -51,9 +51,7 @@ https://github.com/earlephilhower/arduino-pico/releases/download/global/package_
 
 //Переменные меню и тд
 
-//Битмапы всегда будут цвета FONE_COLOR и TEXT_COLOR даже если изменить параметры VConfig.json
-uint16_t FONE_COLOR = ST77XX_BLACK;
-uint16_t TEXT_COLOR = ST77XX_WHITE;
+
 boolean AUDIOC = true;
 
 byte MainMenu = 0;     //Переменная для изменения меню
@@ -63,6 +61,8 @@ byte SettCastom = 0;   //Переменная для переменщения в
 byte FileSelect = 0;   //Переменная для перемещения в Файлах
 byte MAXFILE = 0;      //Переменная макс файлов
 String FileName[200];  //Переменная имен файлов
+int CursorY = 0;
+String FileText;
 
 //Создаем объекты экрана и кнопок
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
@@ -320,7 +320,7 @@ void loop() {
         Serial.println("OK");
         //Читаем выбраный файл
         File file = LittleFS.open("/" + FileName[FileSelect - 1], "r");
-        String val1 = file.readString();
+        FileText = file.readString();
         file.close();
 
         //Очищаем экран и ставим настройки
@@ -328,8 +328,8 @@ void loop() {
         tft.setTextSize(1);
         tft.setCursor(0, 7);
         //Отображаем текст
-        tft.print(val1);
-        Serial.println(val1);
+        tft.print(FileText);
+        Serial.println(FileText);
         tft.setTextSize(2);
         //Переходи в меню чтения
         MainMenu = 5;
@@ -338,10 +338,26 @@ void loop() {
   }
   //Чтение файлов
   if (MainMenu == 5) {
+    if (buttup.isClick()) {
+      tft.fillRect(0, CursorY - 10, 240, 240 - (CursorY - 10), FONE_COLOR);
+      CursorY -= 20;
+      tft.setTextSize(1);
+      tft.setCursor(0, CursorY);
+      tft.print(FileText);
+      tft.setTextSize(2);
+    } else if (buttdown.isClick()) {
+      tft.fillRect(0, CursorY - 10, 240, 240 - (CursorY - 10), FONE_COLOR);
+      CursorY += 20;
+      tft.setTextSize(1);
+      tft.setCursor(0, CursorY);
+      tft.print(FileText);
+      tft.setTextSize(2);
+    }
     //Условие если нажали на кнопку Y
     if (butty.isClick()) {
       //Переходим в меню Файлы
       MainMenu = 4;
+      CursorY = 0;
       //Очищаем экран
       tft.fillScreen(FONE_COLOR);
       //Отображаем интерфейс без файлов
@@ -478,7 +494,19 @@ void loop() {
             break;
           }
         case 4:
-          break;
+          {
+            tft.fillScreen(ST77XX_BLACK);
+            LittleFS.format();
+
+            tft.setTextSize(3);
+            tft.setCursor((240 - (9 * 20)) / 2, 50);
+            tft.print("Требуется");
+            tft.setCursor((240 - (12 * 18)) / 2, 100);
+            tft.print("Перезагрузка");
+            tft.setTextSize(2);
+            MainMenu=-1;
+            break;
+          }
       }
     }
   }

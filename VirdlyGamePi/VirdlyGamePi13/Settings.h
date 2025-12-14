@@ -26,6 +26,10 @@
 // Пин динамика
 #define BUZ 18
 
+//Битмапы всегда будут цвета FONE_COLOR и TEXT_COLOR даже если изменить параметры VConfig.json
+uint16_t FONE_COLOR = ST77XX_BLACK;
+uint16_t TEXT_COLOR = ST77XX_WHITE;
+
 //Стандартные настройки при сбросе
 #define AUDIOCB 1
 uint16_t FONECB = ST77XX_BLACK;
