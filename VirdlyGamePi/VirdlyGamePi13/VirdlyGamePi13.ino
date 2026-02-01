@@ -54,8 +54,9 @@ https://github.com/earlephilhower/arduino-pico/releases/download/global/package_
 
 boolean AUDIOC = true;
 
-byte MainMenu = 0;     //Переменная для изменения меню
-byte MainSelect = 0;   //Переменная для перемещения в главном меню
+byte MainMenu = 0;    //Переменная для изменения меню
+byte MainSelect = 0;  //Переменная для перемещения в главном меню
+byte ProgSelect = 0;
 byte SettSelect = 0;   //Переменная для перемещения в настройках
 byte SettCastom = 0;   //Переменная для переменщения в кастомизации
 byte FileSelect = 0;   //Переменная для перемещения в Файлах
@@ -63,6 +64,17 @@ byte MAXFILE = 0;      //Переменная макс файлов
 String FileName[200];  //Переменная имен файлов
 int CursorY = 0;
 String FileText;
+
+
+byte PinS = 0;
+int BallX = 110;
+int BallY = 110;
+int RotateX = 1;
+int RotateY = 1;
+int Speed = 2;
+
+int PlayerY = 90;
+int BotY = 90;
 
 //Создаем объекты экрана и кнопок
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
@@ -90,6 +102,20 @@ uint16_t ColorUint(String Text) {
   }
   return ST77XX_WHITE;
 };
+void printCentered(String text, int textSize, int YY) {
+  int16_t x1, y1;
+  uint16_t w, h;
+
+  tft.setTextSize(textSize);
+  tft.getTextBounds(text, 0, 0, &x1, &y1, &w, &h);
+
+  // Центрирование по горизонтали и вертикали
+  int x = (tft.width() - w) / 2;
+  //int y = (tft.height() - h) / 2;
+
+  tft.setCursor(x, YY);
+  tft.print(text);
+}
 void setup() {
   Serial.begin(115200);
   LittleFS.begin();
@@ -266,7 +292,9 @@ void loop() {
             break;
           }
         case 2:
-          //В будущем быдут добавлены
+          MainMenu = 6;
+          tft.fillRect(0, 0, 240, 120, FONE_COLOR);
+          programm();
           break;
         case 3:
           //Переходим на меню Инфо
@@ -278,6 +306,150 @@ void loop() {
           break;
       }
     }
+  }
+  //Программы
+  if (MainMenu == 6) {
+    if (buttdown.isClick() && ProgSelect < 2) {
+      ProgSelect++;
+      tft.fillRect(0, 17, 19, 38 + 18 * 3, FONE_COLOR);
+      if (ProgSelect == 0) {
+        tft.setCursor(0, 38);
+        tft.print(">");
+      } else {
+        tft.setCursor(0, 38 + 18 * ProgSelect);
+        tft.print(">");
+      }
+    }
+    if (buttup.isClick() && ProgSelect > 0) {
+      ProgSelect--;
+      tft.fillRect(0, 17, 19, 38 + 18 * 3, FONE_COLOR);
+      if (ProgSelect == 0) {
+        tft.setCursor(0, 38);
+        tft.print(">");
+      } else {
+        tft.setCursor(0, 38 + 18 * ProgSelect);
+        tft.print(">");
+      }
+    }
+    if (butty.isClick()) {
+      switch (ProgSelect) {
+        case 0:
+          //Возращаемся в главное меню
+          MainMenu = 0;
+          //Очищаем экран
+          tft.fillRect(0, 0, 240, 120, FONE_COLOR);
+          //Отрисовываем главное меню
+          mainmenu();
+          break;
+        case 1:
+          MainMenu = 7;
+          tft.fillRect(0, 0, 240, 120, FONE_COLOR);
+          pinballmenu();
+      }
+    }
+  }
+  if (MainMenu == 7) {
+    if (buttup.isClick() & PinS > 0) {
+      PinS--;
+      if (PinS == 0) {
+        tft.fillRect(120 - 40, 40, 15, 80, FONE_COLOR);
+        tft.setCursor(120 - 40, 80);
+        tft.print(">");
+      } else if (PinS == 1) {
+        tft.fillRect(120 - 40, 40, 15, 80, FONE_COLOR);
+        tft.setCursor(120 - 40, 80 + 18);
+        tft.print(">");
+      }
+    } else if (buttdown.isClick() && PinS < 1) {
+      PinS++;
+      if (PinS == 0) {
+        tft.fillRect(120 - 40, 80, 10, 40, FONE_COLOR);
+        tft.setCursor(120 - 40, 80);
+        tft.print(">");
+      } else if (PinS == 1) {
+        tft.fillRect(120 - 40, 80, 10, 40, FONE_COLOR);
+        tft.setCursor(120 - 40, 80 + 18);
+        tft.print(">");
+      }
+    }
+    if (butty.isClick()) {
+      switch (PinS) {
+        case 0:
+          MainMenu = 8;
+          tft.fillScreen(FONE_COLOR);
+          game();
+          break;
+        case 1:
+          MainMenu = 6;
+          tft.fillScreen(FONE_COLOR);
+          programm();
+          break;
+      }
+    }
+  }
+  if (MainMenu == 8) {
+    tft.fillRect(BallX - 10, BallY - 10, 21, 22, FONE_COLOR);
+    if (buttup.isClick()) {
+      tft.fillRect(0, PlayerY, 10, 60, FONE_COLOR);
+      PlayerY -= 20;
+      if (PlayerY < 0) {
+        PlayerY = 0;
+      }
+      tft.fillRect(0, PlayerY, 10, 60, TEXT_COLOR);
+    } else if (buttdown.isClick()) {
+      tft.fillRect(0, PlayerY, 10, 60, FONE_COLOR);
+      PlayerY += 20;
+      if (PlayerY > 240 - 60) {
+        PlayerY = 240 - 60;
+      }
+      tft.fillRect(0, PlayerY, 10, 60, TEXT_COLOR);
+    }
+    if (RotateX == 1) {
+      BallX += Speed;  //Вправо
+    } else if (RotateX == 0) {
+      BallX -= Speed;  //Влево
+    }
+    if (BallX > 150) {
+      if (BallY > BotY) {
+        tft.fillRect(240 - 10, BotY, 10, 60, FONE_COLOR);
+        BotY += 10;
+        if (BotY > 240 - 60) {
+          BotY = 240 - 60;
+        }
+      } else if (BallY < BotY) {
+        tft.fillRect(240 - 10, BotY, 10, 60, FONE_COLOR);
+        BotY -= 10;
+        if (BotY < 0) {
+          BotY = 0;
+        }
+      }
+    }
+    tft.fillRect(240 - 10, BotY, 10, 60, TEXT_COLOR);
+    if (BallY > BotY && BallY < BotY + 60) {
+      if (BallX > 240 - 23) {
+        RotateX = 0;
+      }
+    }
+    if (RotateY == 1) {
+      BallY -= Speed;  //Верх
+    } else if (RotateY == 0) {
+      BallY += Speed;  //Вниз
+    }
+    if (BallY > 240) {
+      RotateY = 1;
+    } else if (BallY < 0) {
+      RotateY = 0;
+    }
+    if (BallY > PlayerY && BallY < PlayerY + 60) {
+      if (BallX < 22) {
+        RotateX = 1;
+      }
+    }
+    if (BallX < 0) {
+      MainMenu = 7;
+    }
+
+    tft.fillCircle(BallX, BallY, 10, TEXT_COLOR);
   }
   //Файлы
   if (MainMenu == 4) {
@@ -504,7 +676,7 @@ void loop() {
             tft.setCursor((240 - (12 * 18)) / 2, 100);
             tft.print("Перезагрузка");
             tft.setTextSize(2);
-            MainMenu=-1;
+            MainMenu = -1;
             break;
           }
       }

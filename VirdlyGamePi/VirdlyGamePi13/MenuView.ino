@@ -83,11 +83,54 @@ void filesm() {
   }
 
   tft.setTextSize(2);
-  tft.setCursor(20,38);
+  tft.setCursor(20, 38);
   tft.print("Выход");
 
   tft.setCursor(0, 38 + 18 * FileSelect);
   tft.print(">");
+}
+void programm() {
+  tft.setTextSize(1);
+  tft.setCursor(0, 10);
+  tft.print("Программы");
+  tft.drawLine(0, 15, TFT_WIDTH, 15, TEXT_COLOR);
+
+  if (AUDIOC == true) {
+    tft.drawRGBBitmap(240 - 8 - 5, 3, bitmap_AudioON, 8, 7);
+  } else {
+    tft.drawRGBBitmap(240 - 8 - 5, 3, bitmap_AudioOFF, 9, 7);
+  }
+  tft.setTextSize(2);
+  tft.setCursor(20, 38);
+  tft.print("Выход");
+  tft.setCursor(20, 38 + 18);
+  tft.print("ПинБол");
+
+  if (ProgSelect == 0) {
+    tft.setCursor(0, 38);
+    tft.print(">");
+  } else {
+    tft.setCursor(0, 38 + 18 * ProgSelect);
+    tft.print(">");
+  }
+}
+void pinballmenu() {
+  printCentered("PinBall", 2, 35);
+
+  printCentered("Play", 2, 80);
+  printCentered("Exit", 2, 80 + 18);
+
+  tft.setCursor(120 - 40, 80);
+  tft.print(">");
+
+  tft.drawRoundRect(1, 15, 240, 25, 15, TEXT_COLOR);
+  tft.drawRoundRect(1, 1, 238, 239, 15, TEXT_COLOR);
+}
+void game() {
+  tft.fillRect(0, PlayerY, 10, 60, TEXT_COLOR);
+  tft.fillRect(240 - 10, BotY, 10, 60, TEXT_COLOR);
+
+  tft.fillCircle(BallX, BallY, 10, TEXT_COLOR);
 }
 void kcastom() {
   tft.setTextSize(1);
