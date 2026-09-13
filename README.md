@@ -1,5 +1,7 @@
 # Virdly-GamePi
 
+## Уже устарело Проект не обновляется😢
+
 [![Release](https://img.shields.io/github/v/release/Virdly/Virdly-GamePi?style=for-the-badge&color=blue)](https://github.com/Virdly/Virdly-GamePi/releases)
 [![License](https://img.shields.io/github/license/Virdly-Virdly-GamePi?style=for-the-badge)]
 [![Platform](https://img.shields.io/badge/Platform-Raspberry%20Pi%20Pico%20RP2040-blueviolet?style=for-the-badge)]
